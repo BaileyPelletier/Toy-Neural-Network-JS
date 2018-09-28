@@ -14,10 +14,28 @@ class Matrix {
     }
   }
 
+  static fromArray(arr) {
+    let m = new Matrix(arr.length, 1);
+    for (let i = 0; i < arr.length; i++) {
+      m.data[i][0] = arr[i];
+    }
+    return m;
+  }
+
+  toArray() {
+    let arr = [];
+    for (var i = 0; i < this.rows; i++) {
+      for (var j = 0; j < this.cols; j++) {
+        arr.push(this.data[i][j]);
+      }
+    }
+    return arr;
+  }
+
   randomize() { //Affects data of matrix
       for (var i = 0; i < this.rows; i++) {
         for (var j = 0; j < this.cols; j++) {
-          this.data[i][j] += Math.floor(Math.random()*10);
+          this.data[i][j] += Math.floor(Math.random()*2-1); //Random value between -1 and 1
         }
       }
   }
