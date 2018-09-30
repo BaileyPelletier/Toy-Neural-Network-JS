@@ -28,18 +28,18 @@ class NeuralNetwork {
     this.bias_h.randomize();
     this.bias_o.randomize();
 
-    this.learning_rate = 0.1;
+    this.setLearningRate();
   }
 
   printWeights () {
     console.log("Weights matrix between input and hidden layers");
-    console.table(this.weights_ih);
+    this.weights_ih.print();
     console.log("Weights matrix between hidden and output layers");
-    console.table(this.weights_ih);
+    this.weights_ih.print();
 
   }
 
-  feedforward (input_array) {
+  predict (input_array) { //formally feedforward
 
     // Generating the hidden outputs
     let inputs = Matrix.fromArray(input_array);
@@ -57,6 +57,10 @@ class NeuralNetwork {
 
     // Sending back to caller!
     return output.toArray();
+  }
+
+  setLearningRate(learning_rate = 0.1) {  // Function to set learning rate; DEFAULT IS 0.1
+    this.learning_rate = learning_rate;
   }
 
   train(input_array, target_array) { //Stochastic Gradient Descent
