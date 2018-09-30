@@ -14,7 +14,7 @@ class Matrix {
     }
   }
 
-  static fromArray(arr) {
+  static fromArray(arr) { // returns a matrix object
     let m = new Matrix(arr.length, 1);
     for (let i = 0; i < arr.length; i++) {
       m.data[i][0] = arr[i];
@@ -40,6 +40,17 @@ class Matrix {
       }
   }
 
+  static subtract (a,b) { // returns a matrix object
+    // Return a new Matrix a-b
+    let result = new Matrix(a.rows, a.cols);
+    for (var i = 0; i < result.rows; i++) {
+      for (var j = 0; j < result.cols; j++) {
+        result.data[i][j] = a.data[i][j] - b.data[i][j];
+      }
+    }
+    return result;
+  }
+
   add(n) { //Affects data of matrix
     if (n instanceof Matrix) {
       for (var i = 0; i < this.rows; i++) {
@@ -56,19 +67,19 @@ class Matrix {
     }
   }
 
-  transpose() { //Returns new Matrix
-    let result = new Matrix(this.cols, this.rows);
+  static transpose(matrix) { //Returns new Matrix
+    let result = new Matrix(matrix.cols, matrix.rows);
 
-    for (var i = 0; i < this.rows; i++) {
-      for (var j = 0; j < this.cols; j++) {
-        result.data[j][i] = this.data[i][j];
+    for (var i = 0; i < matrix.rows; i++) {
+      for (var j = 0; j < matrix.cols; j++) {
+        result.data[j][i] = matrix.data[i][j];
       }
     }
 
     return result;
   }
 
-  static multiply(a, b) {
+  static multiply(a, b) { // returns a matrix object
     //Dot Product
     if (a.cols != b.rows) {
       console.log("Columns of A must match rows of B.");
@@ -91,12 +102,41 @@ class Matrix {
   }
 
   multiply(n) {
-    //Scalar Product
-    for (var i = 0; i < this.rows; i++) {
-      for (var j = 0; j < this.cols; j++) {
-        this.data[i][j] *= n;
+    if (n instanceof Matrix) {
+      if (this.rows !== n.rows || this.cols !== n.cols) {
+        console.log('Columns and Rows of A must match Columns and Rows of B.');
+        return;
+      }
+
+      // Hadamard Product
+      for (var i = 0; i < this.rows; i++) {
+        for (var j = 0; j < this.cols; j++) {
+          this.data[i][j] *= n.data[i][j];
+        }
+      }
+    } else {
+      // Scalar product
+      for (var i = 0; i < this.rows; i++) {
+        for (var j = 0; j < this.cols; j++) {
+          this.data[i][j] *= n;
+        }
       }
     }
+
+
+    // if (n instanceof Matrix) {
+    //   if (this.rows !== n.rows || this.cols !== n.cols) {
+    //     console.log('Columns and Rows of A must match Columns and Rows of B.');
+    //     return;
+    //   }
+    // }
+    //
+    // //Scalar Product
+    // for (var i = 0; i < this.rows; i++) {
+    //   for (var j = 0; j < this.cols; j++) {
+    //     this.data[i][j] *= n;
+    //   }
+    // }
   }
 
   map(func) {
@@ -107,6 +147,19 @@ class Matrix {
         this.data[i][j] = func(val);
       }
     }
+  }
+
+  static map(matrix, func) { //returns a matrix object
+    let result = new Matrix(matrix.rows, matrix.cols);
+    // Apply a funciton to every element of matrix
+    for (var i = 0; i < matrix.rows; i++) {
+      for (var j = 0; j < matrix.cols; j++) {
+        let val = matrix.data[i][j]
+        result.data[i][j] = func(val);
+      }
+    }
+
+    return result;
   }
 
   print() {
